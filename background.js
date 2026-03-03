@@ -185,11 +185,7 @@ async function showOverviewInActiveTab() {
       type: "showOverview"
     });
   } catch (error) {
-    try {
-      await chrome.action.openPopup();
-    } catch (popupError) {
-      // Restricted pages may block content scripts and popup opening may also be unavailable.
-    }
+    // The current tab may not allow content scripts (for example chrome:// pages).
   }
 }
 

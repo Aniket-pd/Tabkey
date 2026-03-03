@@ -64,7 +64,6 @@ body {
     radial-gradient(circle at top right, var(--bg-glow), transparent 34%),
     linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
   color: var(--text-main);
-  border-radius: 24px;
 }
 
 button,
@@ -79,7 +78,6 @@ input {
   min-height: 0;
   padding: 14px;
   overflow: hidden;
-  border-radius: 24px;
 }
 
 .hero {
@@ -182,11 +180,13 @@ kbd {
   border: 1px solid var(--surface-line);
   border-radius: 14px;
   background: var(--surface);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
 }
 
 .tab-card.is-active {
-  border-color: var(--surface-line);
-  background: var(--surface);
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  background: linear-gradient(180deg, var(--active-top), var(--active-bottom));
 }
 
 .tab-button {
@@ -222,7 +222,7 @@ kbd {
 }
 
 .favicon-placeholder {
-  background: var(--placeholder-start);
+  background: linear-gradient(135deg, var(--placeholder-start), var(--placeholder-end));
 }
 
 .tab-copy {

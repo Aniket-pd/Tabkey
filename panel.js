@@ -17,7 +17,7 @@ const state = {
 };
 
 const elements = {
-  panelShortcutHint: document.getElementById("panelShortcutHint"),
+  panelShortcutModifier: document.getElementById("panelShortcutModifier"),
   searchInput: document.getElementById("searchInput"),
   summary: document.getElementById("summary"),
   tabList: document.getElementById("tabList")
@@ -222,48 +222,21 @@ function buildFaviconPlaceholder() {
 }
 
 async function updateShortcutHint() {
-  if (!(elements.panelShortcutHint instanceof HTMLElement)) {
+  if (!(elements.panelShortcutModifier instanceof HTMLElement)) {
     return;
   }
 
-  let shortcut = "Alt+Shift+K";
+  let platform = "";
 
   try {
-    const commands = await chrome.commands.getAll();
-    const executeAction = commands.find((command) => command.name === "_execute_action");
-
-    if (executeAction?.shortcut) {
-      shortcut = executeAction.shortcut;
-    }
+    const info = await chrome.runtime.getPlatformInfo();
+    platform = info.os;
   } catch (error) {
-    // Keep the fallback shortcut.
+    platform = navigator.platform || "";
   }
 
-  const parts = shortcut
-    .split("+")
-    .map((part) => part.trim())
-    .filter(Boolean)
-    .map((part) => {
-      if (part === "Alt" && navigator.userAgent.includes("Mac")) {
-        return "Option";
-      }
-
-      return part;
-    });
-
-  elements.panelShortcutHint.replaceChildren();
-
-  parts.forEach((part, index) => {
-    const key = document.createElement("kbd");
-    key.textContent = part;
-    elements.panelShortcutHint.appendChild(key);
-
-    if (index < parts.length - 1) {
-      const separator = document.createElement("span");
-      separator.textContent = "+";
-      elements.panelShortcutHint.appendChild(separator);
-    }
-  });
+  const isMac = String(platform).toLowerCase().includes("mac");
+  elements.panelShortcutModifier.textContent = isMac ? "Option" : "Alt";
 }
 
 async function refreshState() {
