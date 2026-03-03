@@ -17,6 +17,7 @@ const state = {
 };
 
 const elements = {
+  panelShortcutModifier: document.getElementById("panelShortcutModifier"),
   searchInput: document.getElementById("searchInput"),
   summary: document.getElementById("summary"),
   tabList: document.getElementById("tabList")
@@ -220,6 +221,24 @@ function buildFaviconPlaceholder() {
   return placeholder;
 }
 
+async function updateShortcutHint() {
+  if (!(elements.panelShortcutModifier instanceof HTMLElement)) {
+    return;
+  }
+
+  let platform = "";
+
+  try {
+    const info = await chrome.runtime.getPlatformInfo();
+    platform = info.os;
+  } catch (error) {
+    platform = navigator.platform || "";
+  }
+
+  const isMac = String(platform).toLowerCase().includes("mac");
+  elements.panelShortcutModifier.textContent = isMac ? "Option" : "Alt";
+}
+
 async function refreshState() {
   const nextState = await chrome.runtime.sendMessage({ type: "getState" });
 
@@ -272,7 +291,10 @@ function attachEvents() {
 
 document.addEventListener("DOMContentLoaded", () => {
   attachEvents();
-  void refreshState().then(() => {
+  void Promise.all([
+    refreshState(),
+    updateShortcutHint()
+  ]).then(() => {
     elements.searchInput.focus();
   });
 });
