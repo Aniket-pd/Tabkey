@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tabkey</title>
+    <link rel="stylesheet" href="panel.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Tabkey</p>
+          <h1>Switch tabs without breaking flow.</h1>
+        </div>
+        <p class="hint">
+          <kbd>Alt</kbd>
+          <span>+</span>
+          <kbd>Shift</kbd>
+          <span>+</span>
+          <kbd>K</kbd>
+        </p>
+      </header>
+
+      <label class="search">
+        <span class="visually-hidden">Search tabs</span>
+        <input
+          id="searchInput"
+          type="search"
+          autocomplete="off"
+          placeholder="Filter tabs by title"
+          spellcheck="false"
+        >
+      </label>
+
+      <div id="summary" class="summary" aria-live="polite"></div>
+      <section id="tabList" class="tab-list" aria-live="polite"></section>
+    </main>
+
+    <script src="panel.js"></script>
+  </body>
+</html>
