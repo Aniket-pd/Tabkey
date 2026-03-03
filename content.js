@@ -114,33 +114,6 @@ function createOverviewMarkup(items) {
         all: initial;
       }
 
-      .tabkey-root {
-        color-scheme: light dark;
-        --tabkey-surface: #ffffff;
-        --tabkey-border: #dfdce2;
-        --tabkey-border-strong: #d7d2da;
-        --tabkey-text: #45474f;
-        --tabkey-muted: #8b8c94;
-        --tabkey-accent: #6d9a9e;
-        --tabkey-accent-soft: #edf3f2;
-        --tabkey-key-bg: #ffffff;
-        --tabkey-shadow: 0 1px 2px rgba(43, 46, 58, 0.03), 0 8px 18px rgba(43, 46, 58, 0.04);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        .tabkey-root {
-          --tabkey-surface: #151923;
-          --tabkey-border: #2a3040;
-          --tabkey-border-strong: #343b4d;
-          --tabkey-text: #edeef5;
-          --tabkey-muted: #9a9eab;
-          --tabkey-accent: #6d9a9e;
-          --tabkey-accent-soft: rgba(109, 154, 158, 0.16);
-          --tabkey-key-bg: #121722;
-          --tabkey-shadow: none;
-        }
-      }
-
       .tabkey-wrap {
         position: fixed;
         top: 16px;
@@ -148,12 +121,13 @@ function createOverviewMarkup(items) {
         z-index: 2147483647;
         width: min(360px, calc(100vw - 32px));
         padding: 14px;
-        border: 1px solid var(--tabkey-border);
-        border-radius: 20px;
-        background: var(--tabkey-surface);
-        color: var(--tabkey-text);
-        box-shadow: var(--tabkey-shadow);
-        font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 18px;
+        background: rgba(15, 23, 42, 0.9);
+        color: #e5e7eb;
+        box-shadow: 0 18px 44px rgba(2, 8, 23, 0.35);
+        backdrop-filter: blur(14px);
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
         pointer-events: none;
       }
 
@@ -166,16 +140,16 @@ function createOverviewMarkup(items) {
       }
 
       .tabkey-label {
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.18em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: var(--tabkey-muted);
+        color: #7dd3fc;
       }
 
       .tabkey-hint {
         font-size: 11px;
-        color: var(--tabkey-muted);
+        color: #94a3b8;
         white-space: nowrap;
       }
 
@@ -187,26 +161,24 @@ function createOverviewMarkup(items) {
 
       .tabkey-row {
         display: grid;
-        grid-template-columns: 46px minmax(0, 1fr);
-        gap: 12px;
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 10px;
         align-items: center;
         padding: 10px;
-        border: 1px solid var(--tabkey-border);
-        border-radius: 18px;
-        background: var(--tabkey-surface);
+        border-radius: 14px;
+        background: rgba(30, 41, 59, 0.72);
       }
 
       .tabkey-key {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 46px;
-        height: 46px;
-        border: 1px solid var(--tabkey-border-strong);
-        border-radius: 16px;
-        background: var(--tabkey-key-bg);
-        color: var(--tabkey-text);
-        font-size: 24px;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(248, 250, 252, 0.96);
+        color: #0f766e;
+        font-size: 20px;
         font-weight: 700;
       }
 
@@ -216,9 +188,9 @@ function createOverviewMarkup(items) {
 
       .tabkey-title {
         overflow: hidden;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
-        line-height: 1.22;
+        line-height: 1.35;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -228,35 +200,32 @@ function createOverviewMarkup(items) {
         align-items: center;
         gap: 8px;
         margin-top: 4px;
-        font-size: 12px;
-        color: var(--tabkey-muted);
+        font-size: 11px;
+        color: #94a3b8;
       }
 
       .tabkey-badge {
-        padding: 4px 10px;
+        padding: 3px 7px;
         border-radius: 999px;
-        background: var(--tabkey-accent-soft);
-        color: var(--tabkey-accent);
+        background: rgba(79, 209, 197, 0.18);
+        color: #5eead4;
         font-weight: 700;
       }
 
       .tabkey-empty {
-        padding: 12px;
-        border: 1px solid var(--tabkey-border);
-        border-radius: 18px;
-        background: var(--tabkey-surface);
+        padding: 10px;
+        border-radius: 14px;
+        background: rgba(30, 41, 59, 0.72);
         font-size: 12px;
-        color: var(--tabkey-muted);
+        color: #cbd5e1;
       }
     </style>
-    <div class="tabkey-root">
-      <div class="tabkey-wrap" role="status" aria-live="polite" aria-label="Tabkey shortcut overview">
+    <div class="tabkey-wrap" role="status" aria-live="polite" aria-label="Tabkey shortcut overview">
       <div class="tabkey-head">
         <span class="tabkey-label">Shortcuts</span>
         <span class="tabkey-hint">Auto-hides</span>
       </div>
       <div class="tabkey-list">${rows}</div>
-      </div>
     </div>
   `;
 }
