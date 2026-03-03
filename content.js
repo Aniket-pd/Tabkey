@@ -40,6 +40,73 @@ function isEditableTarget(target) {
   return Boolean(target.closest('[contenteditable=""], [contenteditable="true"], [role="textbox"]'));
 }
 
+function isInteractiveTarget(target) {
+  if (!(target instanceof Element)) {
+    return false;
+  }
+
+  const interactiveSelector = [
+    "a[href]",
+    "button",
+    "details",
+    "iframe",
+    "label",
+    "summary",
+    "video",
+    "audio",
+    "[role='button']",
+    "[role='checkbox']",
+    "[role='combobox']",
+    "[role='gridcell']",
+    "[role='link']",
+    "[role='listbox']",
+    "[role='menuitem']",
+    "[role='option']",
+    "[role='radio']",
+    "[role='slider']",
+    "[role='switch']",
+    "[tabindex]:not([tabindex='-1'])"
+  ].join(", ");
+
+  return Boolean(target.closest(interactiveSelector));
+}
+
+function hasTextSelection() {
+  const selection = window.getSelection();
+  return Boolean(selection && !selection.isCollapsed && selection.toString().trim());
+}
+
+function canUseGlobalShortcut(event) {
+  if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) {
+    return false;
+  }
+
+  if (!VALID_SHORTCUTS.has(event.key) || !assignments[event.key]) {
+    return false;
+  }
+
+  if (isEditableTarget(event.target) || isInteractiveTarget(event.target)) {
+    return false;
+  }
+
+  const activeElement = document.activeElement;
+
+  if (
+    activeElement instanceof Element &&
+    activeElement !== document.body &&
+    activeElement !== document.documentElement &&
+    (isEditableTarget(activeElement) || isInteractiveTarget(activeElement))
+  ) {
+    return false;
+  }
+
+  if (hasTextSelection()) {
+    return false;
+  }
+
+  return true;
+}
+
 function getOverviewHost() {
   let host = document.getElementById(OVERVIEW_HOST_ID);
 
@@ -274,23 +341,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 window.addEventListener(
   "keydown",
   (event) => {
-    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) {
-      return;
-    }
-
-    if (!VALID_SHORTCUTS.has(event.key) || !assignments[event.key]) {
-      return;
-    }
-
-    if (isEditableTarget(event.target)) {
+    if (!canUseGlobalShortcut(event)) {
       return;
     }
 
     event.preventDefault();
     event.stopPropagation();
     chrome.runtime.sendMessage({ type: "activateShortcut", shortcut: event.key });
-  },
-  true
+  }
 );
 
 window.addEventListener("keydown", (event) => {
