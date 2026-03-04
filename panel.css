@@ -58,7 +58,8 @@
 body {
   margin: 0;
   width: 420px;
-  height: 560px;
+  height: auto;
+  max-height: 560px;
   overflow: hidden;
   background:
     radial-gradient(circle at top right, var(--bg-glow), transparent 34%),
@@ -74,8 +75,8 @@ input {
 .shell {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
+  height: auto;
+  max-height: 560px;
   padding: 14px;
   overflow: hidden;
 }
@@ -167,6 +168,7 @@ kbd {
   flex: 1 1 auto;
   min-height: 0;
   gap: 8px;
+  max-height: none;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 4px;
