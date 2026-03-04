@@ -1,53 +1,33 @@
 :root {
   color-scheme: light dark;
-  --bg-top: #f8f4eb;
-  --bg-bottom: #e9eef5;
-  --bg-glow: rgba(15, 118, 110, 0.18);
-  --surface: rgba(255, 255, 255, 0.82);
-  --surface-strong: rgba(255, 255, 255, 0.96);
-  --surface-line: rgba(44, 55, 80, 0.12);
-  --surface-line-strong: rgba(44, 55, 80, 0.16);
-  --text-main: #1f2937;
-  --text-muted: #5f6b80;
-  --accent: #0f766e;
-  --accent-soft: rgba(15, 118, 110, 0.14);
-  --focus-ring: rgba(15, 118, 110, 0.12);
-  --active-top: rgba(255, 255, 255, 0.94);
-  --active-bottom: rgba(240, 255, 252, 0.92);
-  --placeholder-start: rgba(15, 118, 110, 0.18);
-  --placeholder-end: rgba(31, 41, 55, 0.12);
-  --empty-bg: rgba(255, 255, 255, 0.62);
-  --scrollbar: rgba(44, 55, 80, 0.2);
-  --favicon-bg: rgba(255, 255, 255, 0.85);
-  --shadow: 0 14px 36px rgba(31, 41, 55, 0.12);
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --radius-sm: 10px;
-  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  --bg: #f5f5f7;
+  --panel: #ffffff;
+  --panel-soft: #fafafa;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --accent: #2563eb;
+  --accent-soft: rgba(37, 99, 235, 0.12);
+  --focus: rgba(37, 99, 235, 0.2);
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+  font-family: "SF Pro Text", "SF Pro Display", "Avenir Next", "Helvetica Neue", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-top: #13212c;
-    --bg-bottom: #0b121a;
-    --bg-glow: rgba(79, 209, 197, 0.14);
-    --surface: rgba(17, 24, 39, 0.82);
-    --surface-strong: rgba(17, 24, 39, 0.96);
-    --surface-line: rgba(148, 163, 184, 0.18);
-    --surface-line-strong: rgba(148, 163, 184, 0.24);
-    --text-main: #e5e7eb;
-    --text-muted: #9aa4b5;
-    --accent: #4fd1c5;
-    --accent-soft: rgba(79, 209, 197, 0.18);
-    --focus-ring: rgba(79, 209, 197, 0.16);
-    --active-top: rgba(17, 24, 39, 0.98);
-    --active-bottom: rgba(16, 41, 43, 0.92);
-    --placeholder-start: rgba(79, 209, 197, 0.16);
-    --placeholder-end: rgba(148, 163, 184, 0.12);
-    --empty-bg: rgba(17, 24, 39, 0.58);
-    --scrollbar: rgba(148, 163, 184, 0.24);
-    --favicon-bg: rgba(31, 41, 55, 0.9);
-    --shadow: 0 14px 36px rgba(0, 0, 0, 0.34);
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-soft: #1d212a;
+    --line: #2a2f3a;
+    --line-strong: #3a4352;
+    --text: #e5e7eb;
+    --text-muted: #9ca3af;
+    --accent: #60a5fa;
+    --accent-soft: rgba(96, 165, 250, 0.18);
+    --focus: rgba(96, 165, 250, 0.24);
   }
 }
 
@@ -60,10 +40,8 @@ body {
   width: 420px;
   height: 560px;
   overflow: hidden;
-  background:
-    radial-gradient(circle at top right, var(--bg-glow), transparent 34%),
-    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
-  color: var(--text-main);
+  background: var(--bg);
+  color: var(--text);
 }
 
 button,
@@ -77,29 +55,32 @@ input {
   height: 100%;
   min-height: 0;
   padding: 14px;
-  overflow: hidden;
+  gap: 10px;
 }
 
 .hero {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
 }
 
 .eyebrow {
-  margin: 0 0 6px;
-  font-size: 11px;
+  margin: 0 0 4px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--text-muted);
 }
 
 h1 {
   margin: 0;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.2;
 }
 
@@ -107,24 +88,23 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin: 2px 0 0;
-  padding: 6px 8px;
-  border: 1px solid var(--surface-line);
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--surface);
+  background: var(--panel-soft);
   color: var(--text-muted);
   font-size: 11px;
   white-space: nowrap;
-  box-shadow: var(--shadow);
 }
 
 kbd {
-  min-width: 22px;
-  padding: 3px 5px;
-  border: 1px solid var(--surface-line-strong);
-  border-radius: 8px;
-  background: var(--surface-strong);
-  color: var(--text-main);
+  min-width: 20px;
+  padding: 2px 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
   font-size: 10px;
   font-weight: 700;
   text-align: center;
@@ -132,31 +112,31 @@ kbd {
 
 .search {
   display: block;
-  margin-bottom: 8px;
-  flex: 0 0 auto;
 }
 
 .search input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--surface-line);
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--surface-strong);
-  color: var(--text-main);
+  background: var(--panel);
+  color: var(--text);
   outline: none;
-  box-shadow: var(--shadow);
+}
+
+.search input::placeholder {
+  color: var(--text-muted);
 }
 
 .search input:focus {
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  box-shadow:
-    var(--shadow),
-    0 0 0 4px var(--focus-ring);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--focus);
 }
 
 .summary {
-  margin-bottom: 8px;
-  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 2px;
   font-size: 11px;
   color: var(--text-muted);
 }
@@ -164,7 +144,7 @@ kbd {
 .tab-list {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
   gap: 8px;
   overflow-y: auto;
@@ -176,17 +156,15 @@ kbd {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 52px;
   gap: 10px;
-  padding: 9px 10px;
-  border: 1px solid var(--surface-line);
-  border-radius: 14px;
-  background: var(--surface);
-  backdrop-filter: blur(8px);
-  box-shadow: var(--shadow);
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
 }
 
 .tab-card.is-active {
-  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
-  background: linear-gradient(180deg, var(--active-top), var(--active-bottom));
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--panel) 90%, var(--accent) 10%);
 }
 
 .tab-button {
@@ -203,8 +181,8 @@ kbd {
 }
 
 .tab-button:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 34%, transparent);
-  outline-offset: 4px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
@@ -213,16 +191,16 @@ kbd {
   flex: 0 0 16px;
   width: 16px;
   height: 16px;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .favicon {
   object-fit: cover;
-  background: var(--favicon-bg);
+  background: var(--panel-soft);
 }
 
 .favicon-placeholder {
-  background: linear-gradient(135deg, var(--placeholder-start), var(--placeholder-end));
+  background: linear-gradient(135deg, var(--line-strong), var(--line));
 }
 
 .tab-copy {
@@ -232,11 +210,10 @@ kbd {
 .tab-title {
   display: block;
   overflow: hidden;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .tab-meta {
@@ -244,8 +221,8 @@ kbd {
   align-items: center;
   gap: 6px;
   margin-top: 2px;
-  font-size: 10px;
   color: var(--text-muted);
+  font-size: 10px;
 }
 
 .badge {
@@ -260,7 +237,6 @@ kbd {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
 }
 
 .shortcut-label {
@@ -269,12 +245,12 @@ kbd {
 
 .shortcut-input {
   width: 42px;
-  height: 36px;
+  height: 34px;
   padding: 6px;
-  border: 1px solid var(--surface-line-strong);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: var(--surface-strong);
-  color: var(--text-main);
+  background: var(--panel-soft);
+  color: var(--text);
   font-size: 16px;
   font-weight: 700;
   text-align: center;
@@ -282,15 +258,15 @@ kbd {
 }
 
 .shortcut-input:focus {
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-  box-shadow: 0 0 0 4px var(--focus-ring);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--focus);
 }
 
 .empty-state {
   padding: 16px;
-  border: 1px dashed var(--surface-line-strong);
-  border-radius: var(--radius-lg);
-  background: var(--empty-bg);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--panel-soft);
   color: var(--text-muted);
   font-size: 12px;
   line-height: 1.5;
@@ -315,5 +291,5 @@ kbd {
 
 .tab-list::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: var(--scrollbar);
+  background: var(--line-strong);
 }
