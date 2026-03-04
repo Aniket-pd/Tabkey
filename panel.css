@@ -170,6 +170,11 @@ kbd {
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 4px;
+  background: transparent !important;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .tab-card {
@@ -185,8 +190,9 @@ kbd {
 }
 
 .tab-card.is-active {
-  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
-  background: linear-gradient(180deg, var(--active-top), var(--active-bottom));
+  border-color: var(--surface-line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .tab-button {
