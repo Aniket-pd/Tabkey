@@ -13,6 +13,7 @@ const NAVIGATION_KEYS = new Set([
 const state = {
   assignments: {},
   query: "",
+  sourceTabId: null,
   tabs: []
 };
 
@@ -273,6 +274,54 @@ async function activateTab(tabId) {
   }
 }
 
+async function activateShortcutFromPopup(shortcut) {
+  const currentTabId = Number.isInteger(state.sourceTabId)
+    ? state.sourceTabId
+    : await resolvePopupSourceTabId();
+
+  const response = await chrome.runtime.sendMessage({
+    currentTabId,
+    shortcut,
+    type: "activateShortcut"
+  });
+
+  if (response?.ok) {
+    window.close();
+  }
+}
+
+function isShortcutInput(target) {
+  return target instanceof Element && Boolean(target.closest(".shortcut-input"));
+}
+
+async function resolvePopupSourceTabId() {
+  try {
+    const activeTabs = await chrome.tabs.query({ active: true });
+
+    const bestTab = activeTabs
+      .filter((tab) => Number.isInteger(tab.id))
+      .sort((left, right) => (right.lastAccessed || 0) - (left.lastAccessed || 0))[0];
+
+    return Number.isInteger(bestTab?.id) ? bestTab.id : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function resolveShortcutFromKeyEvent(event) {
+  if (VALID_SHORTCUTS.includes(event.key)) {
+    return event.key;
+  }
+
+  const codeMatch = /^Digit([1-9])$/.exec(event.code);
+  if (codeMatch) {
+    return codeMatch[1];
+  }
+
+  const numpadMatch = /^Numpad([1-9])$/.exec(event.code);
+  return numpadMatch ? numpadMatch[1] : "";
+}
+
 function attachEvents() {
   elements.searchInput.addEventListener("input", (event) => {
     state.query = event.target.value.trim().toLowerCase();
@@ -287,11 +336,45 @@ function attachEvents() {
       event.preventDefault();
     }
   });
+
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.isComposing) {
+        return;
+      }
+
+      const shortcut = resolveShortcutFromKeyEvent(event);
+
+      if (!shortcut) {
+        return;
+      }
+
+      if (isShortcutInput(event.target)) {
+        return;
+      }
+
+      if (
+        event.target === elements.searchInput &&
+        elements.searchInput.value.trim().length > 0
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      void activateShortcutFromPopup(shortcut);
+    },
+    true
+  );
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   attachEvents();
   void Promise.all([
+    resolvePopupSourceTabId().then((tabId) => {
+      state.sourceTabId = tabId;
+    }),
     refreshState(),
     updateShortcutHint()
   ]).then(() => {

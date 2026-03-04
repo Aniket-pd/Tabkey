@@ -189,9 +189,30 @@ async function showOverviewInActiveTab() {
   }
 }
 
-async function resolveCurrentTab(sender) {
+async function resolveCurrentTab(sender, requestedCurrentTabId = null) {
+  if (Number.isInteger(requestedCurrentTabId)) {
+    try {
+      return await chrome.tabs.get(requestedCurrentTabId);
+    } catch (error) {
+      // Fall through to other resolution strategies.
+    }
+  }
+
   if (Number.isInteger(sender?.tab?.id)) {
     return chrome.tabs.get(sender.tab.id);
+  }
+
+  try {
+    const activeTabs = await chrome.tabs.query({ active: true });
+    const activeTab = activeTabs
+      .filter((tab) => Number.isInteger(tab.id))
+      .sort((left, right) => (right.lastAccessed || 0) - (left.lastAccessed || 0))[0];
+
+    if (activeTab && Number.isInteger(activeTab.id)) {
+      return chrome.tabs.get(activeTab.id);
+    }
+  } catch (error) {
+    // Fall through to tab query fallback.
   }
 
   const [activeTab] = await chrome.tabs.query({
@@ -206,14 +227,14 @@ async function resolveCurrentTab(sender) {
   return activeTab;
 }
 
-async function activateShortcut(shortcut, sender) {
+async function activateShortcut(shortcut, sender, requestedCurrentTabId = null) {
   if (!VALID_SHORTCUTS.has(shortcut)) {
     return { ok: false };
   }
 
   const [assignments, currentTab] = await Promise.all([
     loadAssignments(),
-    resolveCurrentTab(sender)
+    resolveCurrentTab(sender, requestedCurrentTabId)
   ]);
   const tabId = assignments[shortcut];
 
@@ -274,6 +295,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 chrome.commands.onCommand.addListener((command) => {
   if (command === "open_overview") {
     void showOverviewInActiveTab();
+    return;
   }
 });
 
@@ -305,7 +327,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === "activateShortcut") {
-    void activateShortcut(message.shortcut, sender)
+    void activateShortcut(
+      message.shortcut,
+      sender,
+      Number.isInteger(message.currentTabId) ? message.currentTabId : null
+    )
       .then((result) => sendResponse(result))
       .catch(() => sendResponse({ ok: false }));
     return true;
