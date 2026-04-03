@@ -10,8 +10,8 @@ Tabkey is a Manifest V3 browser extension for Chrome/Chromium that lets you assi
 - Includes a search box so large tab sets stay manageable.
 - Supports opening the panel from a keyboard shortcut (`Alt+Shift+K` by default).
 - Includes a quick overview shortcut (`Alt+Shift+O` by default) that briefly overlays only the assigned tabs and their keys on the current page.
-- Includes a quick-switch fallback command (`Alt+Shift+J` by default) for restricted pages where plain digit capture is blocked.
 - Adapts automatically to system light and dark mode.
+- Opens a first-run setup page after install with a short guided flow.
 
 ## Install
 
@@ -20,6 +20,7 @@ Tabkey is a Manifest V3 browser extension for Chrome/Chromium that lets you assi
 3. Click **Load unpacked** and select this folder:
    `/Users/aniket/Documents/Personal Project/Tabkey`
 4. Optional: open `chrome://extensions/shortcuts` to change the panel and overview shortcuts.
+5. After install, Tabkey opens a welcome page with quick setup instructions.
 
 ## Use
 
@@ -30,13 +31,11 @@ Tabkey is a Manifest V3 browser extension for Chrome/Chromium that lets you assi
 5. Press the same number again while you are on that assigned tab to return to the tab you came from.
 6. Clear a shortcut by deleting the number in its box.
 7. Use `Alt+Shift+O` to flash a quick in-page overview of assigned tabs only.
-8. On restricted pages (for example internal browser pages and some PDF views), press `Alt+Shift+J` then press `1` to `9` in quick mode.
 
 ## Notes
 
 - Number key switching is ignored while your cursor is inside inputs, textareas, selects, or editable content.
 - Chrome restricts content scripts on internal pages such as `chrome://` URLs and the Chrome Web Store, so bare number shortcuts will not trigger from those pages.
-- Use quick-switch fallback in `chrome://extensions/shortcuts` if needed, and customize it to avoid conflicts.
 - For `file://` pages, enable **Allow access to file URLs** in the extension details to let Tabkey run on local files.
 - Chrome’s built-in PDF viewer may still block extension script injection on some PDF surfaces due to browser security restrictions.
 - The quick overview uses the same content-script limitation, so it will not appear on pages where extensions cannot inject UI.

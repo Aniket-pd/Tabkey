@@ -18,11 +18,30 @@ const state = {
 };
 
 const elements = {
+  feedback: document.getElementById("feedback"),
   panelShortcutModifier: document.getElementById("panelShortcutModifier"),
   searchInput: document.getElementById("searchInput"),
   summary: document.getElementById("summary"),
   tabList: document.getElementById("tabList")
 };
+
+function setFeedback(message) {
+  if (!(elements.feedback instanceof HTMLElement)) {
+    return;
+  }
+
+  elements.feedback.textContent = message || "";
+}
+
+async function sendRuntimeMessage(payload) {
+  try {
+    setFeedback("");
+    return await chrome.runtime.sendMessage(payload);
+  } catch (error) {
+    setFeedback("Tabkey is temporarily unavailable. Try reopening the popup.");
+    return null;
+  }
+}
 
 function buildAssignedByTab() {
   return new Map(
@@ -241,7 +260,14 @@ async function updateShortcutHint() {
 }
 
 async function refreshState() {
-  const nextState = await chrome.runtime.sendMessage({ type: "getState" });
+  const nextState = await sendRuntimeMessage({ type: "getState" });
+
+  if (!nextState) {
+    state.tabs = [];
+    state.assignments = {};
+    render();
+    return;
+  }
 
   state.tabs = Array.isArray(nextState?.tabs) ? nextState.tabs : [];
   state.assignments = typeof nextState?.assignments === "object" && nextState.assignments
@@ -252,26 +278,31 @@ async function refreshState() {
 }
 
 async function assignShortcut(tabId, shortcut) {
-  const response = await chrome.runtime.sendMessage({
+  const response = await sendRuntimeMessage({
     shortcut,
     tabId,
     type: "assignShortcut"
   });
 
   if (!response?.ok) {
+    setFeedback("Could not save shortcut. Check tab permissions and retry.");
     return;
   }
 
   state.assignments = response.assignments;
+  setFeedback("");
   render(tabId);
 }
 
 async function activateTab(tabId) {
-  const response = await chrome.runtime.sendMessage({ tabId, type: "activateTab" });
+  const response = await sendRuntimeMessage({ tabId, type: "activateTab" });
 
   if (response?.ok) {
     window.close();
+    return;
   }
+
+  setFeedback("Unable to focus that tab. It may have closed.");
 }
 
 async function activateShortcutFromPopup(shortcut) {
@@ -279,7 +310,7 @@ async function activateShortcutFromPopup(shortcut) {
     ? state.sourceTabId
     : await resolvePopupSourceTabId();
 
-  const response = await chrome.runtime.sendMessage({
+  const response = await sendRuntimeMessage({
     currentTabId,
     shortcut,
     type: "activateShortcut"
@@ -287,7 +318,10 @@ async function activateShortcutFromPopup(shortcut) {
 
   if (response?.ok) {
     window.close();
+    return;
   }
+
+  setFeedback("Shortcut could not be activated on this page.");
 }
 
 function isShortcutInput(target) {

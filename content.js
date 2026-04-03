@@ -5,6 +5,38 @@ const OVERVIEW_HOST_ID = "tabkey-overview-host";
 
 let assignments = {};
 let overviewHideTimer = null;
+let extensionContextInvalidated = false;
+
+function isContextInvalidationError(error) {
+  return String(error?.message || error || "")
+    .toLowerCase()
+    .includes("extension context invalidated");
+}
+
+function safeSendMessage(message) {
+  if (extensionContextInvalidated) {
+    return;
+  }
+
+  try {
+    const maybePromise = chrome.runtime.sendMessage(message);
+
+    if (maybePromise && typeof maybePromise.then === "function") {
+      void maybePromise.catch((error) => {
+        if (isContextInvalidationError(error)) {
+          extensionContextInvalidated = true;
+        }
+      });
+    }
+  } catch (error) {
+    if (isContextInvalidationError(error)) {
+      extensionContextInvalidated = true;
+      return;
+    }
+
+    throw error;
+  }
+}
 
 function sanitizeAssignments(rawAssignments) {
   const cleanedAssignments = {};
@@ -288,7 +320,7 @@ window.addEventListener(
 
     event.preventDefault();
     event.stopPropagation();
-    chrome.runtime.sendMessage({ type: "activateShortcut", shortcut: event.key });
+    safeSendMessage({ type: "activateShortcut", shortcut: event.key });
   },
   true
 );
@@ -299,4 +331,6 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
-void hydrateAssignments();
+void hydrateAssignments().catch(() => {
+  assignments = {};
+});

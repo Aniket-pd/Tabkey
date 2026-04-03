@@ -292,6 +292,14 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   void pruneRemovedTab(tabId);
 });
 
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason !== "install") {
+    return;
+  }
+
+  void chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") });
+});
+
 chrome.commands.onCommand.addListener((command) => {
   if (command === "open_overview") {
     void showOverviewInActiveTab();
