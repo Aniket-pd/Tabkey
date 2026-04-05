@@ -162,19 +162,6 @@ kbd {
   color: var(--text-muted);
 }
 
-.feedback {
-  min-height: 16px;
-  margin-bottom: 8px;
-  font-size: 11px;
-  color: #b91c1c;
-}
-
-@media (prefers-color-scheme: dark) {
-  .feedback {
-    color: #fca5a5;
-  }
-}
-
 .tab-list {
   display: flex;
   flex-direction: column;
